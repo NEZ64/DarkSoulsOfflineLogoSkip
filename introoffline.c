@@ -1,5 +1,5 @@
 /*
- *    build cmd:
+ *    build cmd with mingw32:
  *        gcc -Wall -Wl,--out-implib,libmessage.a -Wl,--enable-stdcall-fixup
  *            exports.DEF introoffline.c -shared -o DINPUT8.dll
  *
@@ -108,16 +108,16 @@ void attach_hook(void)
 	
 	void *base_addr = GetModuleHandle(NULL);
 	for (int i = 0; i < (sizeof(patches) / sizeof(patches[0])); i++) {
-		struct patch *patch = patches + i;
-		void *addr = base_addr + patch->rel_addr;
-		DWORD size = patch->size;
+	    struct patch *patch = patches + i;
+	    void *addr = base_addr + patch->rel_addr;
+	    DWORD size = patch->size;
 
-		if (memcmp(addr, patch->orig, size) == 0) {
-			DWORD old;
-			VirtualProtect(addr, size, PAGE_EXECUTE_READWRITE, &old);
-			memcpy(addr, patch->patch, size);
-			VirtualProtect(addr, size, old, &old);
-		}
+	    if (memcmp(addr, patch->orig, size) == 0) {
+	        DWORD old;
+		VirtualProtect(addr, size, PAGE_EXECUTE_READWRITE, &old);
+		memcpy(addr, patch->patch, size);
+		VirtualProtect(addr, size, old, &old);
+	    }
 	}
     }
     {
