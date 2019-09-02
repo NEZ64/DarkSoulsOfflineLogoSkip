@@ -113,13 +113,14 @@ void attach_hook(void)
 	    DWORD size = patch->size;
 
 	    if (memcmp(addr, patch->orig, size) == 0) {
-	        DWORD old;
+		DWORD old;
 		VirtualProtect(addr, size, PAGE_EXECUTE_READWRITE, &old);
 		memcpy(addr, patch->patch, size);
 		VirtualProtect(addr, size, old, &old);
 	    }
 	}
     }
+
     {
 	/* setting game to offline */
 	static char hook_bytes[] =
@@ -149,7 +150,7 @@ void attach_hook(void)
 
 	int *offset_loc;
 	int  new_offset;
-	   /* get address the  game is supposed to call */
+	/* get address the  game is supposed to call */
 	offset_loc   = injct_pnt + 1;
 	new_offset   = *offset_loc;
 	new_offset  += (int)injct_pnt + 5;
@@ -157,13 +158,13 @@ void attach_hook(void)
 	offset_loc   = hook + 13;
 	*offset_loc  = new_offset;
 
-	   /* get the address our code jumps back to */
+	/* get the address our code jumps back to */
 	new_offset   = (int)injct_pnt + 5;
 	new_offset  -= (int)hook + 22;
 	offset_loc   = hook + 18;
 	*offset_loc  = new_offset;
 
-	   /* write the jump to our code over the game's */
+	/* write the jump to our code over the game's */
 	new_offset   = (hook - injct_pnt) - 5;
 	*(char*) injct_pnt++ = 0xe9;
 	offset_loc   = injct_pnt;
