@@ -121,11 +121,12 @@ void attach_hook(void)
             /* debug */
 	    fps_injct_pnt = (void*)0xebe952;
             reg_injct_pnt = (char*)0x7078df;
-	} else {
+	} else if (ver_num == 0xe91b11e2) {
             /* steamworks (+cracked?) */
 	    fps_injct_pnt = (void*)0xeba704;
             reg_injct_pnt = (char*)0x7069cf;
-        }
+        } else
+	    return;
 
 	DWORD op;
 	VirtualProtect(hook_bytes, sizeof(hook_bytes),
